@@ -181,6 +181,11 @@ const test = () => {
     }
   }
 
+  .collection-container {
+    padding-bottom: 100px;
+
+  }
+
 
 
       .arrow {
@@ -188,15 +193,23 @@ const test = () => {
         bottom: 5%;
         left: 50%;
         cursor: pointer;
-        color: black;
+        color: white;
         font-weight: 200;
         font-size: 70px;
       }
 
+      @media screen and (max-width: 1024px) {
+        .arrow {
+         display: none;
+    
+        }
+      }
+    
+
       .top-mid-container {
         height: 70vh;
         width: 100vw;
-        background: #dea0c0;
+        background: #FB8DE9;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -220,7 +233,7 @@ const test = () => {
         justify-content: space-around;
         flex-direction: column;
         line-height: 48px;
-        color: #0033cc;
+        color: #33ccff;
 
       }
 
@@ -300,7 +313,7 @@ const test = () => {
       
 
       .top-mid-container a {
-        color: #0033cc;
+        color: #33ccff;
         font-size: 2rem;
         text-decoration: none;
         font-weight: 800;
@@ -317,7 +330,7 @@ const test = () => {
 
 
       .bottom-mid-section {
-        background: #0033cc;
+        background: #33ccff;
         height: 40vh;
 
       }
@@ -348,7 +361,7 @@ const test = () => {
 
       .bottom-mid-section li p {
         letter-spacing: 1.2px;
-        color: #dea0c0;
+        color: #FB8DE9;
         font-size: 1.9rem;
 
       }
@@ -361,14 +374,15 @@ const test = () => {
         justify-content: center;
         align-items: center;
         letter-spacing: 1.1px;
-        color: #0033cc;
+        color: #33ccff;
         font-size: 3rem;
         
       }
 
       .collection-header h3 { 
         margin: 0;
-
+        font-size: 5rem;
+        font-weight: 800;
       }
 
       .collection-container {
@@ -379,6 +393,7 @@ const test = () => {
         width: 100%;
         height: 40vh;
         cursor: pointer;
+        
         
       }
 
