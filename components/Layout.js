@@ -43,7 +43,31 @@ return (
       </header>
      {/* <h1>{title}</h1> */}
       {children}
-    {/* <footer>
+    <footer>
+    <section className='top-footer'>
+      <div className='top-footer-conatain'>
+        <div className='left-top-footer'>
+          <p>Get in touch with us to learn more</p>
+          <a href="#">Contact me.</a>
+        </div>
+        <div className='contact-info'>
+          <p className='mail'>abc123@gmail.com</p>
+          <div className='footer-icons'>
+            <a href='https://www.facebook.com/jamison.blackwell.3/'>{<FontAwesomeIcon className='list-icon-dash' icon={faFacebookF}/> }</a>
+              
+              
+            <a href='https://twitter.com/JamisonBlackw10'>{<FontAwesomeIcon className='list-icon-dash' icon={faInstagram}/> }</a>
+              
+              
+            <a href='https://github.com/jblack186'>{<FontAwesomeIcon className='list-icon-dash' icon={faYoutube}/> }</a>
+              
+            
+          </div>
+          </div>
+        </div>
+      </section>
+
+
     <section className='footer-container'>
       <div className='footer-left'>
           <Link href="/">
@@ -52,21 +76,18 @@ return (
           <Link href="/about">
               <a>About</a>
           </Link>
-          <Link href="/hireme">
-            <a>Hire Me</a>
-          </Link>
           <Link href="/blog">
-            <a>Blog</a>
+            <a>Contact</a>
           </Link>
       </div>
       <div className='footer-right'>
-          <img className='footer-logo' src="../static/logo.png" alt="logo" />
-<p>@ Copyright - 2020</p>
+          <img className='footer-logo' style={{width: '3rem'}} src="../static/bunny.png" alt="logo" />
+          <p className='copyright'>@ Copyright - 2020 by AllureInk</p>
       </div>
 
               </section>
 
-    </footer> */}
+    </footer>
     <style jsx>{`
   
   header {
@@ -126,8 +147,50 @@ return (
     color: white;
   }
 
+  .top-footer {
+    background: #D8E3FF;
+    height: 230px;
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+    border-bottom: white 1px solid;
+  }
+
+  .top-footer-conatain {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .top-footer-conatain a {
+    color: white;
+  }
+
+  .top-footer-conatain p {
+    color: #FB8DE9;
+  }
+
+  .mail {
+    font-size: 1.3rem;
+
+  }
+
+  .footer-icons {
+    display: flex; 
+    justify-content: space-evenly;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .contact-info {
+     display: none;
+
+    }
+  }
+
+
   footer {
-    background: #0d42a2;
+    background: #FB8DE9;
     color: #d1d1d1;
     font-size: 1rem;
     font-weight: 200;
@@ -136,24 +199,26 @@ return (
 
   .footer-container {
     height: 200px;
-    background: #0d42a2;
+    background: #FB8DE9;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
   }
 
   .footer-left {
     display: flex;
-    width: 300px;
+    width: 40%;
     justify-content: space-around;
+    align-items: center;
 
   }
 
   .footer-right {
     display: flex;
     flex-direction: column;
+    align-items: center;
 
   }
 
@@ -169,12 +234,24 @@ return (
     color: #d1d1d1;
   }
 
+  .copyright {
+    margin: 0;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .footer-logo {
+     display: none;
+
+    }
+  }
+
+
 
 
 `}</style>
     <style global jsx>{`
       body {
-        font-family: 'Libre Baskerville', serif;
+        font-family: 'Yanone Kaffeesatz', sans-serif;
         margin: 0;
         font-size: 110%;
       }
