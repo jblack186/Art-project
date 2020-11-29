@@ -2,24 +2,54 @@ import Link from 'next/link';
 import Layout from '../components/Layout';
 import { Component, useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faShoppingBag, faArrowDown, faBrush, faRuler, faMagic, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingBag, faAngleDown, faBrush, faRuler, faMagic, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import {faFacebookF, faInstagram, faTwitter, faYoutube} from '@fortawesome/free-brands-svg-icons';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {Container, Row, Col} from 'react-bootstrap';
+import { motion, useViewportScroll } from "framer-motion"
+import { Link as Lin, animateScroll as scroll } from "react-scroll";
 
 export default function Index({news}) {
+  const [opacity, setOpacity] = useState(1);
+  const [display, setDisplay] = useState(0);
+  const [lastYPos, setLastYPos] = useState(0);
+  const [popOut, setPopOut] = useState(false);
 
-  
+  const [shouldShowActions, setShouldShowActions] = useState(false);
+
+
+  const setImageStyle = () => {
+    setOpacity(opacity);
+
+  }
+
+const test = () => {
+  console.log('yo')
+}
+
+
+
+
     return (
   <Layout>
+    
+    <div className='arrow'>
+    <Lin 
+        activeClass="active"
+        to="toBiz"
+        spy={true}
+        smooth={true}
+        offset={-70}
+        duration={500}
+        ><FontAwesomeIcon onClick={test}  className='arrow' icon={faAngleDown} /></Lin>
+      </div>
+
     <section className='top-section'>
       <img className='hero' src="../static/hero.jpg" alt="hero" />
-      <div className='arrow'>
-        <FontAwesomeIcon style={{color: 'white', fontSize: '70px'}} className='bag' icon={faArrowDown} />
-      </div>
     </section>
     <section className='top-mid-container'>
       <div className='top-mid'>
-        <h1>BlueAllureInk</h1>
+        <h1  id="toBiz">BlueAllureInk</h1>
         <p>I'm James Lewis, a multidisciplinary British artist. Best known for producing viral art videos, teaching art workshops, and working with the biggest global brands.</p>
         <a href='#'>Learn More</a>
       </div>
@@ -27,45 +57,140 @@ export default function Index({news}) {
     <section className='bottom-mid-section'>
       <ul>
         <li>
-          <FontAwesomeIcon style={{color: 'white', fontSize: '2.3rem'}} className='bag' icon={faBrush} />
+          <FontAwesomeIcon style={{color: 'white', fontSize: '2rem'}} className='bag' icon={faBrush} />
           <p>Character Painting</p>
         </li>
         <li>
-          <FontAwesomeIcon style={{color: 'white', fontSize: '2.3rem'}} className='bag' icon={faRuler} />
+          <FontAwesomeIcon style={{color: 'white', fontSize: '2rem'}} className='bag' icon={faRuler} />
           <p>Character Painting</p>
         </li>
         <li>
-          <FontAwesomeIcon style={{color: 'white', fontSize: '2.3rem'}} className='bag' icon={faMagic} />
+          <FontAwesomeIcon style={{color: 'white', fontSize: '2rem'}} className='bag' icon={faMagic} />
           <p>Character Painting</p>
         </li>
         <li>
-          <FontAwesomeIcon style={{color: 'white', fontSize: '2.3rem'}} className='bag' icon={faPencilAlt} />
+          <FontAwesomeIcon style={{color: 'white', fontSize: '2rem'}} className='bag' icon={faPencilAlt} />
           <p>Character Painting</p>
         </li>
 
       </ul>
     </section>
-    <style jsx>{`
+    {/* <section className='collection-section'>
+      <div className='collection-header'>
+        <h3>Collection</h3>
+      </div>
+      <div className='collection-container'>
+        <div className='collection'>
+          <img className='collection-img' src='../static/collection1.jpg' alt='collection1' />
+          <div className='collection-text'>Trees</div>
+          <div className='overlay'></div>
+        </div>
+        <div className='collection'>
+          <img className='collection-img' src='../static/collection2.jpg' alt='collection2' />
+
+        </div>
+        <div className='collection-img' className='collection'>
+          <img src='../static/collection3.jpg' alt='collection3' />
+
+        </div>
+
+      </div>
+    </section> */}
+    <section className='collection-container'>
+    <div className='collection-header'>
+        <h3>Collection</h3>
+      </div>
+
+      <div className='row-container'>
+  <Row>
+    <Col lg={4} > 
+      <div>
+        <div className="content">  
+        <div className="content-overlay"></div>
+        <img className="collection-img" src="../static/collection1.jpg" />
+        <div className="content-details fadeIn-top fadeIn-top">
+          
+          <p>Trees</p>
+        </div>
+    </div>
+</div>    
+</Col>
+    <Col lg={4}>        
+    <div>
+        <div className="content">  
+        <div className="content-overlay"></div>
+        <img className="collection-img" src="../static/collection2.jpg" />
+        <div className="content-details fadeIn-top fadeIn-top">
+          
+          <p>Town</p>
+        </div>
+    </div>
+</div>    
+</Col>
+
+    <Col lg={4}>
+    <div>
+        <div className="content">  
+        <div className="content-overlay"></div>
+        <img className="collection-img" src="../static/collection3.jpg" />
+        <div className="content-details fadeIn-top fadeIn-top">
+          
+          <p>Trees</p>
+        </div>
+    </div>
+</div>    
+
+
+    </Col>
+  </Row>
+</div>
+</section>
+<style jsx>{`
+
 
       .top-section {
-        position: relative;
-        background: lightblue;
+        position: sticky;
+        top: 0;
+        z-index: -1;
+
 
       }
 
       .hero {
         object-fit: cover;
-        height: 90vh;
+        height: 86vh;
         width: 100vw;
-        position: sticky;
-        top: 100px;
+        z-index: -1;
+
       }
+      
+
+      @media screen and (max-width: 700px) {
+        .hero {
+          height: 68vh;
+ 
+ 
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .hero {
+        height: 35vh;
+
+
+    }
+  }
+
+
 
       .arrow {
         position: absolute;
-        bottom: 7%;
+        bottom: 5%;
         left: 50%;
         cursor: pointer;
+        color: black;
+        font-weight: 200;
+        font-size: 70px;
       }
 
       .top-mid-container {
@@ -75,6 +200,7 @@ export default function Index({news}) {
         display: flex;
         flex-direction: column;
         justify-content: center;
+
       }
 
       @media screen and (max-width: 600px) {
@@ -95,6 +221,7 @@ export default function Index({news}) {
         flex-direction: column;
         line-height: 48px;
         color: #0033cc;
+
       }
 
       @media screen and (max-width: 1024px) {
@@ -190,12 +317,12 @@ export default function Index({news}) {
 
 
       .bottom-mid-section {
-        background: lightblue;
+        background: #0033cc;
         height: 40vh;
-        
+
       }
 
-      @media screen and (max-width: 600px) {
+      @media screen and (max-width: 900px) {
         .bottom-mid-section {
           display: none;
           
@@ -216,14 +343,175 @@ export default function Index({news}) {
 
       .bottom-mid-section li {
        list-style: none;
-       font-size: 1rem;
-       width: 5rem;
+       width: 10rem;
       }
 
-      .bottom-mid-section li p{
+      .bottom-mid-section li p {
         letter-spacing: 1.2px;
-        color: #0033cc;
+        color: #dea0c0;
+        font-size: 1.9rem;
+
       }
+
+
+      .collection-header {
+        background: white;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        letter-spacing: 1.1px;
+        color: #0033cc;
+        font-size: 3rem;
+        
+      }
+
+      .collection-header h3 { 
+        margin: 0;
+
+      }
+
+      .collection-container {
+        background: white;
+      }
+
+      .collection-img {
+        width: 100%;
+        height: 40vh;
+        cursor: pointer;
+        
+      }
+
+      .row-container {
+        width: 90%;
+        margin: 0 auto;
+      }
+
+
+      .collection {
+        position: relative;
+        cursor: pointer;
+      }
+      
+
+      .overlay-gone {
+        display: none;
+      }
+
+      .collection-text {
+        position: absolute;
+        width: 200px;
+        height: 50px;
+        top: 50%;
+        margin-top: -25px;
+
+      }
+
+
+
+body{
+  background: #f9f9f9;
+  font-size: 16px;
+}
+
+.main-title{
+  color: #2d2d2d;
+  text-align: center;
+  text-transform: capitalize;
+  padding: 0.7em 0;
+}
+
+.contain{
+  float: left;
+  width: 100vw;
+  cursor: pointer;
+}
+@media screen and (max-width: 640px){
+  .contain{
+    display: block;
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 900px){
+  .contain{
+    width: 100%;
+  }
+}
+
+
+.content {
+  position: relative;
+  width: 100%;
+  
+  margin: auto;
+  overflow: hidden;
+}
+
+.content .content-overlay {
+  background: rgba(0,0,0,0.7);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  opacity: 0;
+  transition: all 0.4s ease-in-out 0s;
+  transition: all 0.4s ease-in-out 0s;
+  transition: all 0.4s ease-in-out 0s;
+}
+
+.content:hover .content-overlay{
+  opacity: 1;
+}
+
+
+.content-details {
+  position: absolute;
+  text-align: center;
+  padding-left: 1em;
+  padding-right: 1em;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease-in-out 0s;
+  transition: all 0.3s ease-in-out 0s;
+  transition: all 0.3s ease-in-out 0s;
+}
+
+.content:hover .content-details{
+  top: 50%;
+  left: 50%;
+  opacity: 1;
+}
+
+
+.content-details p{
+  color: #fff;
+  font-size: 2em;
+}
+
+.fadeIn-bottom{
+  top: 80%;
+}
+
+.fadeIn-top{
+  top: 20%;
+}
+
+.fadeIn-left{
+  left: 20%;
+}
+
+.fadeIn-right{
+  left: 80%;
+}
 
 
 
