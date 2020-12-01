@@ -193,7 +193,7 @@ const test = () => {
         bottom: 5%;
         left: 50%;
         cursor: pointer;
-        color: white;
+        color: #FB8DE9;
         font-weight: 200;
         font-size: 70px;
       }
@@ -209,7 +209,7 @@ const test = () => {
       .top-mid-container {
         height: 70vh;
         width: 100vw;
-        background: #FB8DE9;
+        background: lightgray;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -233,7 +233,7 @@ const test = () => {
         justify-content: space-around;
         flex-direction: column;
         line-height: 48px;
-        color: #33ccff;
+        color: black;
 
       }
 
@@ -330,7 +330,7 @@ const test = () => {
 
 
       .bottom-mid-section {
-        background: #33ccff;
+        background: black;
         height: 40vh;
 
       }
@@ -361,7 +361,7 @@ const test = () => {
 
       .bottom-mid-section li p {
         letter-spacing: 1.2px;
-        color: #FB8DE9;
+        color: white;
         font-size: 1.9rem;
 
       }
