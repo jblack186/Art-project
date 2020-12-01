@@ -32,7 +32,7 @@ return (
                   <a>About</a>
                 </Link>
                 <Link href="/hireme">
-                  <a>Hire Me</a>
+                  <a>Contact</a>
                 </Link>
                 <Link href="/blog">
                   <FontAwesomeIcon style={{color: 'lightgray', fontSize: '30px'}} className='bag' icon={faShoppingBag} />
@@ -95,6 +95,7 @@ return (
     height: 100px;
     background-color: white;
     position: relative;
+    z-index: 9999999999999;
 
   }
 
@@ -139,8 +140,10 @@ return (
 
 
   nav a {
-    color: white;
+    color: #FB8DE9;
     text-decoration: none;
+    z-index: 99999999;
+
   }
 
   .bag {
