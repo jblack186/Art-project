@@ -148,7 +148,7 @@ return (
   }
 
   .top-footer {
-    background: #D8E3FF;
+    background: black;
     height: 230px;
     display: flex;
     align-items: center;
