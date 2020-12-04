@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Container, Row, Col} from 'react-bootstrap';
 import { motion, useViewportScroll } from "framer-motion"
 import { Link as Lin, animateScroll as scroll } from "react-scroll";
+import inventory from '../inventory.js';
 
 export default function Index({news}) {
   const [opacity, setOpacity] = useState(1);
@@ -26,6 +27,16 @@ export default function Index({news}) {
 const test = () => {
   console.log('yo')
 }
+
+
+const PostLink = ({ slug, title }) => (
+  <li>
+    <Link as={`/${slug}`} href={`/firstItem?title=${title}`}>
+      <a>{title}</a>
+    </Link>
+  </li>
+);
+
 
 
 
@@ -103,45 +114,21 @@ const test = () => {
 
       <div className='row-container'>
   <Row>
-    <Col lg={4} > 
+  {inventory.map(item => {
+      return      <Link href="/items/[id]" as={`items/${item.id}`}><Col lg={4} > 
       <div>
         <div className="content">  
         <div className="content-overlay"></div>
-        <img className="collection-img" src="../static/collection1.jpg" />
+       <img className="collection-img" src={`../static/${item.pic}`} />
         <div className="content-details fadeIn-top fadeIn-top">
           
           <p>Trees</p>
         </div>
     </div>
 </div>    
-</Col>
-    <Col lg={4}>        
-    <div>
-        <div className="content">  
-        <div className="content-overlay"></div>
-        <img className="collection-img" src="../static/collection2.jpg" />
-        <div className="content-details fadeIn-top fadeIn-top">
-          
-          <p>Town</p>
-        </div>
-    </div>
-</div>    
-</Col>
+</Col></Link>
 
-    <Col lg={4}>
-    <div>
-        <div className="content">  
-        <div className="content-overlay"></div>
-        <img className="collection-img" src="../static/collection3.jpg" />
-        <div className="content-details fadeIn-top fadeIn-top">
-          
-          <p>Trees</p>
-        </div>
-    </div>
-</div>    
-
-
-    </Col>
+    })}
   </Row>
 </div>
 </section>

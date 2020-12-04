@@ -21,7 +21,9 @@ return (
     <header>
         <div className='head-container'>
           <div className='site-name'>
-          <img className='logo' src="../static/bunny.png" alt="logo" />
+          <Link href="/">
+            <img className='logo' src="../static/bunny.png" alt="logo" />
+          </Link>
           </div>
             <nav className='nav-one'>
               <div className='nav-container'>
@@ -130,7 +132,7 @@ return (
   }
 
   .logo {
-
+    cursor: pointer;
     width: 50px;
     heigth: 50px;
     position: fixed;

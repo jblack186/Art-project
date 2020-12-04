@@ -1,6 +1,7 @@
 import Layout from '../components/Layout';
 import Link from 'next/link';
 
+
 const PostLink = ({ slug, title }) => (
   <li>
     <Link as={`/${slug}`} href={`/post?title=${title}`}>
