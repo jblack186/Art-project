@@ -153,7 +153,7 @@ return (
   }
 
   .top-footer {
-    background: black;
+    background: lightgray;
     height: 230px;
     display: flex;
     align-items: center;
@@ -173,7 +173,7 @@ return (
   }
 
   .top-footer-conatain p {
-    color: #FB8DE9;
+    color: black;
   }
 
   .mail {
@@ -195,8 +195,8 @@ return (
 
 
   footer {
-    background: #FB8DE9;
-    color: #d1d1d1;
+    background: black;
+    color: white;
     font-size: 1rem;
     font-weight: 200;
 
@@ -204,7 +204,7 @@ return (
 
   .footer-container {
     height: 200px;
-    background: #FB8DE9;
+    background: black;
     display: flex;
     justify-content: space-between;
     align-items: center;
