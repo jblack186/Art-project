@@ -1,37 +1,67 @@
 import Layout from '../../components/Layout';
-import Link from 'next/link';
 import { withRouter, useRouter } from "next/router";
 import getConfig from 'next/config';
 import fetch from 'isomorphic-unfetch';
 import inventory from '../../inventory.js';
 import { useEffect, useState } from "react";
+import Link from 'next/link';
 
 
 const FirstItem = ({url}) => {
+  const [currCart, setCurrCart] = useState([]);
   const [name, setName] = useState();
   const [price, setPrice] = useState();
-
+  const [quantity, setQuantity] = useState(1);
+  const [item, setItem] = useState();
+  const [items, setItems] = useState();
   const router = useRouter();
-console.log(router.query.id)
-
-const findById = inventory.filter(item => {
-    console.log(item.id)
-    return item.id === Number(router.query.id)
-  })
-
+  console.log(router.query.id)
 
 useEffect(() => {
-  setName(findById.name);
-  setPrice(findById.price)
-}, router)
+  if (window.localStorage.getItem("items")) {
+    let currItems = window.localStorage.getItem("items")
+    currItems = JSON.parse(currItems)
+    setCurrCart(currItems)
+  }
+  inventory.map((prod, key) => {
+    key=prod.id
+    if (prod.id === Number(router.query.id)) {
+      setItem(prod)
+      setName(prod.name)
+      setPrice(prod.price)
+      setName(prod.name)
+      
+    }
+  })
+
+  }, [])
+  console.log('items', currCart)
+
+const add = (e) => {
+  setQuantity(quantity + 1)
+
+}
+
+const addToCart = (e) => {
+  localStorage.setItem("items", JSON.stringify([...currCart, {name, price, quantity}]) )
+
+}
 
 
+function getItem() {
+  var get = window.localStorage.getItem("items")
+  get = JSON.parse(get)
+  console.log('hello', get[1])
 
-console.log(name)
-  return(
+
+}
+
+
+return(
  <Layout title='url.query.title'>
-   { inventory.map(item => {
+   { inventory.map((item, key) => {
       console.log(item.id)
+      key=item.id
       if (item.id === Number(router.query.id)) { return <section className='item-page-container'>
       <div className='item-img'>
       <img className="collection-img" alt='first-item' src="../static/collection1.jpg" />
@@ -39,7 +69,7 @@ console.log(name)
       <div className='item-description'>
         <h3>{item.name}</h3>
         <p>{item.price}</p>
-        <ul>
+        <ul  onClick={getItem} >
           <li>Original Artwork</li>
           <li>Arrives with Certificate of Authencity</li>
           <li>Original Artwork</li>
@@ -47,9 +77,9 @@ console.log(name)
 
         </ul>
   <form action="/action_page.php">
-  <label className='quantity' for="quantity">Quantity</label>
-  <input type="number" id="quantity" name="quantity" min="1" max="100" />
-  <button className='cart'>Add to Cart</button>
+  <label className='quantity' htmlFor="quantity">Quantity</label>
+  <input onClick={add} type="number" id="quantity" name="quantity" value={quantity} min="1" max="100" />
+  <Link href="/checkout"><button onClick={addToCart} className='cart'>Add to Cart</button></Link>
 </form>        
       </div>
     </section>

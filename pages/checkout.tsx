@@ -1,9 +1,31 @@
 import { loadStripe } from '@stripe/stripe-js';
+import { useEffect, useState } from "react";
+
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
-export default function Checkout() {
+const Checkout = () => {
+  const [currCart, setCurrCart] = useState([]);
+  
+
+  useEffect(() => {
+    if (window.localStorage.getItem("items")) {
+      let currItems = window.localStorage.getItem("items")
+      currItems = JSON.parse(currItems)
+      setCurrCart(currItems)
+    }
+    if(currCart.length > 0) {
+      currCart.map((prod, key) => {
+          key=prod.id
+          if (prod.name === prod.name) {
+          return 
+          }
+      })
+    }
+  
+    }, [])
+  console.log(currCart)
+
   const handleClick = async (event) => {
     // Get Stripe.js instance
-
     // Call your backend to create the Checkout Session
     const {sessionId} = await fetch('/api/checkout/session', { 
       method: 'POST',
@@ -23,8 +45,17 @@ export default function Checkout() {
     //   sessionId: session.id,
     // });
   }
+
+
   return (
   <div>
+          {currCart ? currCart.map(prod => {
+        return <div>
+                  <h3>{prod.name}</h3>
+                  <p>{prod.price}</p>
+               </div>
+      }) : null }
+
     <h1>Checkout</h1>
     <button role="link" onClick={handleClick}>
       Checkout
@@ -33,3 +64,5 @@ export default function Checkout() {
   )
 
 }
+
+export default Checkout;
