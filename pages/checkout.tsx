@@ -19,9 +19,9 @@ const Checkout = () => {
 
 
   useEffect( () => {
-    async function getProd() {
+  function getProd() {
     if (localStorage.getItem("items")) {
-      var currItems = await localStorage.getItem("items")
+      var currItems =  localStorage.getItem("items")
       currItems = JSON.parse(currItems)
       setCurrCart(currItems)
     
