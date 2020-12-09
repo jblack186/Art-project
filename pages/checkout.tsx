@@ -4,25 +4,58 @@ import { useEffect, useState } from "react";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 const Checkout = () => {
   const [currCart, setCurrCart] = useState([]);
-  
-
-  useEffect(() => {
-    if (window.localStorage.getItem("items")) {
-      let currItems = window.localStorage.getItem("items")
+  var prods = ''
+  useEffect( () => {
+    
+    if (localStorage.getItem("items")) {
+      let currItems = localStorage.getItem("items")
       currItems = JSON.parse(currItems)
       setCurrCart(currItems)
-    }
+    
+    prods = currItems
+    
+  }
+    }, [])
+
+
+  useEffect( () => {
+    async function getProd() {
+    if (localStorage.getItem("items")) {
+      var currItems = await localStorage.getItem("items")
+      currItems = JSON.parse(currItems)
+      setCurrCart(currItems)
+    
+    
+    let display = currCart[0];
+    const map = new Map();
+      console.log('hey')
     if(currCart.length > 0) {
-      currCart.map((prod, key) => {
-          key=prod.id
-          if (prod.name === prod.name) {
-          return 
-          }
-      })
+    for (let i = 1; i < currCart.length; i++) {
+      console.log('hi')
+
+      let currQuantity = ''
+      if (map.has(currCart[i].name) === false) {
+        console.log('yes')
+
+        currQuantity = currCart[i].quantity
+        map.set(currCart[i].name, currCart[i].quantity)
+      } else {
+        console.log('no')
+        map.set(currCart[i].name, currQuantity + currCart[i].quantity)
+
+        
+      }
+      
+    }
     }
   
-    }, [])
-  console.log(currCart)
+    console.log('map',map)
+ 
+  } else {
+    console.log('no')
+  }
+}
+    },[])
 
   const handleClick = async (event) => {
     // Get Stripe.js instance

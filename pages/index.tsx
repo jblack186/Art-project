@@ -41,7 +41,7 @@ const PostLink = ({ slug, title }) => (
 
 
 
-    return (<Layout title='layout'>
+    return (<Layout title='title'>
               <div className='arrow'>
               <Lin 
                   activeClass="active"
