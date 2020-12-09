@@ -4,7 +4,7 @@ let inventory = [
   "name": "Brushes",
   "price": "220.00",
   "pic": "collection1.jpg"
-
+  
 },
 
 {
