@@ -1,61 +1,33 @@
 import { loadStripe } from '@stripe/stripe-js';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext, createContext } from "react";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+
 const Checkout = () => {
   const [currCart, setCurrCart] = useState([]);
-  var prods = ''
-  useEffect( () => {
-    
-    if (localStorage.getItem("items")) {
+  const [exactCart, setExactCart] = useState([]);
+  const [empty, setEmpty] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [isInCart, setIsInCart] = useState(false);
+
+
+  useEffect(() => {
+    setIsInCart(false)
+
+    if (window.localStorage.getItem("items")) {
       let currItems = localStorage.getItem("items")
       currItems = JSON.parse(currItems)
       setCurrCart(currItems)
+
     
-    prods = currItems
-    
-  }
-    }, [])
-
-
-  useEffect( () => {
-  function getProd() {
-    if (localStorage.getItem("items")) {
-      var currItems =  localStorage.getItem("items")
-      currItems = JSON.parse(currItems)
-      setCurrCart(currItems)
-    
-    
-    let display = currCart[0];
-    const map = new Map();
-      console.log('hey')
-    if(currCart.length > 0) {
-    for (let i = 1; i < currCart.length; i++) {
-      console.log('hi')
-
-      let currQuantity = ''
-      if (map.has(currCart[i].name) === false) {
-        console.log('yes')
-
-        currQuantity = currCart[i].quantity
-        map.set(currCart[i].name, currCart[i].quantity)
-      } else {
-        console.log('no')
-        map.set(currCart[i].name, currQuantity + currCart[i].quantity)
-
-        
-      }
-      
-    }
-    }
-  
-    console.log('map',map)
- 
   } else {
-    console.log('no')
+    setEmpty("Nothing in Cart")
   }
-}
-    },[])
+
+    }, [])
+    console.log('carts1',exactCart)
+    console.log('carts2',currCart)
+
 
   const handleClick = async (event) => {
     // Get Stripe.js instance
@@ -79,14 +51,26 @@ const Checkout = () => {
     // });
   }
 
+  const add = (e) => {
+    setQuantity(quantity + 1)
+  
+  }
+  
 
   return (
   <div>
           {currCart ? currCart.map(prod => {
+
         return <div>
                   <h3>{prod.name}</h3>
                   <p>{prod.price}</p>
+                  <p>{prod.quantity}</p>
+                  <label className='quantity' htmlFor="quantity">Quantity</label>
+                  <input onClick={add} type="number" id="quantity" name="quantity" value={quantity} min="1" max="100" />
+
                </div>
+              
+              
       }) : null }
 
     <h1>Checkout</h1>
@@ -94,6 +78,7 @@ const Checkout = () => {
       Checkout
     </button>
       </div>
+      
   )
 
 }

@@ -3,7 +3,7 @@ import { withRouter, useRouter } from "next/router";
 import getConfig from 'next/config';
 import fetch from 'isomorphic-unfetch';
 import inventory from '../../inventory.js';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Link from 'next/link';
 
 
@@ -11,30 +11,88 @@ const FirstItem = ({url}) => {
   const [currCart, setCurrCart] = useState([]);
   const [name, setName] = useState();
   const [price, setPrice] = useState();
-  const [quantity, setQuantity] = useState(1);
+  const [currQuantity, setCurrQuantity] = useState([]);
   const [item, setItem] = useState();
   const [items, setItems] = useState();
-  const router = useRouter();
-  console.log(router.query.id)
+  const [exactCart, setExactCart] = useState([]);
+  const [quantity, setQuantity] = useState(1);
+  const [cartItems, setCartItems] = useState([]);
+  const [isInCart, setIsInCart] = useState(false);
+  const [idHolder, setIdHolder] = useState();
 
-useEffect(() => {
-  if (window.localStorage.getItem("items")) {
-    let currItems = window.localStorage.getItem("items")
-    currItems = JSON.parse(currItems)
-    setCurrCart(currItems)
-  }
+  const router = useRouter();
+  console.log('search', cartItems)
+console.log('ogogo',name, price)
+console.log(router)
+console.log('holder',idHolder)
+
+
+function getProds() {
+
+  const hold = localStorage.setItem("idHolder", JSON.stringify(Number(router.query.id)) )
+  
+  let holder = window.localStorage.getItem("idHolder")
+  holder = JSON.parse(holder)
+  console.log('coolz',holder)
+  setIdHolder(holder)
+  
   inventory.map((prod, key) => {
     key=prod.id
-    if (prod.id === Number(router.query.id)) {
+    console.log('ID',prod.id, router.query.id)
+    if (Number(router.query.id === idHolder ||  Number(router.query.id) === prod.id )) {
       setItem(prod)
       setName(prod.name)
       setPrice(prod.price)
-      setName(prod.name)
       
     }
+
   })
 
+      let storage = window.localStorage.getItem("item-info")
+      storage = JSON.parse(storage)
+      console.log('boom',storage)
+  
+  
+    
+
+  }
+
+
+useEffect(() => {
+  getProds()
+  
+  if (window.localStorage.getItem("items")) {
+    let currItems = window.localStorage.getItem("items")
+    currItems = JSON.parse(currItems)
+    console.log('boom',currItems)
+    setCurrCart(currItems)
+    setCartItems(currItems)
+    
+    localStorage.setItem("currItem", JSON.stringify([{name, price}]) )
+    console.log('option1')
+  
+  }
+
+
+
+
   }, [])
+
+  useEffect(() => {
+    currCart.map(prod => {
+      if (prod.name === name) {
+        setIsInCart(true)
+
+      
+          } else {
+        setIsInCart(false)
+      }
+  
+    })
+
+  
+  }, [currCart])
+
   console.log('items', currCart)
 
 const add = (e) => {
@@ -43,18 +101,40 @@ const add = (e) => {
 }
 
 const addToCart = (e) => {
-  localStorage.setItem("items", JSON.stringify([...currCart, {name, price, quantity}]) )
+  if (!isInCart && currCart.length > 0) {
 
-}
+  localStorage.setItem("items", JSON.stringify([...currCart, {name, price}]) )
+  console.log('option1')
 
+} else if(!isInCart && currCart.length === 0) {
+    localStorage.setItem("items", JSON.stringify([{name, price}]) )
+  console.log('option2')
+  }
+  
 
-function getItem() {
-  var get = window.localStorage.getItem("items")
-  get = JSON.parse(get)
-  console.log('hello', get[1])
+} 
 
+console.log('name', name, price)
 
-}
+console.log('isit', isInCart)
+// var holder = {};
+// currCart.forEach(function(d) {
+//   if (holder.hasOwnProperty(d.name)) {
+//     holder[d.name] = holder[d.name] + d.quantity;
+//   } else {
+//     holder[d.name] = d.quantity
+//   }
+// })
+
+// var obj2 = [];
+// for (var prop in holder) {
+//   obj2.push({name: prop, quantity: holder[prop]})
+// }
+// localStorage.setItem("itemsQuantity", JSON.stringify(obj2) )
+
+// exactCart.push(obj2)
+// console.log('obj2',obj2)
+
 
 
 return(
@@ -69,21 +149,22 @@ return(
       <div className='item-description'>
         <h3>{item.name}</h3>
         <p>{item.price}</p>
-        <ul  onClick={getItem} >
+        <ul>
           <li>Original Artwork</li>
           <li>Arrives with Certificate of Authencity</li>
           <li>Original Artwork</li>
           <li>Arrives with Certificate of Authencity</li>
 
         </ul>
-  <form action="/action_page.php">
-  <label className='quantity' htmlFor="quantity">Quantity</label>
-  <input onClick={add} type="number" id="quantity" name="quantity" value={quantity} min="1" max="100" />
+  <form action="/checkout">
   <Link href="/checkout"><button onClick={addToCart} className='cart'>Add to Cart</button></Link>
 </form>        
       </div>
+
     </section>
+    
    }})
+
     } 
     
     <style jsx>{`
