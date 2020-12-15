@@ -11,46 +11,45 @@ const FirstItem = ({url}) => {
   const [currCart, setCurrCart] = useState([]);
   const [name, setName] = useState();
   const [price, setPrice] = useState();
+  const [quantity, setQuantity] = useState();
   const [currQuantity, setCurrQuantity] = useState([]);
   const [item, setItem] = useState();
   const [items, setItems] = useState();
   const [exactCart, setExactCart] = useState([]);
-  const [quantity, setQuantity] = useState(1);
   const [cartItems, setCartItems] = useState([]);
   const [isInCart, setIsInCart] = useState(false);
   const [idHolder, setIdHolder] = useState();
+  const [id, setId] = useState();
 
   const router = useRouter();
-  console.log('search', cartItems)
-console.log('ogogo',name, price)
-console.log(router)
-console.log('holder',idHolder)
-
 
 function getProds() {
-
   const hold = localStorage.setItem("idHolder", JSON.stringify(Number(router.query.id)) )
-  
+  console.log('itsme', idHolder)
+
   let holder = window.localStorage.getItem("idHolder")
   holder = JSON.parse(holder)
-  console.log('coolz',holder)
   setIdHolder(holder)
-  
   inventory.map((prod, key) => {
+    console.log(JSON.stringify(Number(router.query.id)), prod.id)
+
     key=prod.id
-    console.log('ID',prod.id, router.query.id)
-    if (Number(router.query.id === idHolder ||  Number(router.query.id) === prod.id )) {
+    if (Number(router.query.id) === idHolder ||  Number(router.query.id) === prod.id ) {
+      console.log('HEEEEEEEEEEY')
       setItem(prod)
       setName(prod.name)
       setPrice(prod.price)
-      
+      setQuantity(prod.quantity)
+      setId(prod.id)
+      console.log('match',idHolder, Number(router.query.id), prod.id)
+    } else {
+      console.log('NOOOOOOOOO')
     }
 
   })
 
       let storage = window.localStorage.getItem("item-info")
       storage = JSON.parse(storage)
-      console.log('boom',storage)
   
   
     
@@ -64,36 +63,39 @@ useEffect(() => {
   if (window.localStorage.getItem("items")) {
     let currItems = window.localStorage.getItem("items")
     currItems = JSON.parse(currItems)
-    console.log('boom',currItems)
     setCurrCart(currItems)
     setCartItems(currItems)
     
-    localStorage.setItem("currItem", JSON.stringify([{name, price}]) )
+    localStorage.setItem("currItem", JSON.stringify([{name, price, id, quantity}]) )
     console.log('option1')
   
   }
 
 
+console.log(currCart)
 
-
-  }, [])
-
+  }, [router])
+  console.log('cart', name)
   useEffect(() => {
-    currCart.map(prod => {
-      if (prod.name === name) {
+    for (let i = 0; i < currCart.length; i++) {
+  
+      console.log('prod',currCart[i].name, '=', name)
+      if ((currCart[i].name === name)) {
         setIsInCart(true)
-
-      
+          console.log('its in the cart')
+          break
           } else {
         setIsInCart(false)
+        console.log('its not in the cart')
+        
+
       }
   
-    })
+    }
 
   
   }, [currCart])
 
-  console.log('items', currCart)
 
 const add = (e) => {
   setQuantity(quantity + 1)
@@ -103,18 +105,19 @@ const add = (e) => {
 const addToCart = (e) => {
   if (!isInCart && currCart.length > 0) {
 
-  localStorage.setItem("items", JSON.stringify([...currCart, {name, price}]) )
+  localStorage.setItem("items", JSON.stringify([...currCart, {name, price, id, quantity}]) )
   console.log('option1')
 
 } else if(!isInCart && currCart.length === 0) {
-    localStorage.setItem("items", JSON.stringify([{name, price}]) )
+    localStorage.setItem("items", JSON.stringify([{name, price, quantity}]) )
   console.log('option2')
+  } else {
+    null
   }
   
 
 } 
 
-console.log('name', name, price)
 
 console.log('isit', isInCart)
 // var holder = {};
@@ -140,7 +143,6 @@ console.log('isit', isInCart)
 return(
  <Layout title='url.query.title'>
    { inventory.map((item, key) => {
-      console.log(item.id)
       key=item.id
       if (item.id === Number(router.query.id)) { return <section className='item-page-container'>
       <div className='item-img'>
