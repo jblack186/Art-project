@@ -1,10 +1,13 @@
 import { loadStripe } from '@stripe/stripe-js';
 import { useEffect, useState, useContext, createContext } from "react";
-import { Router } from 'next/router';
+import { Router, useRouter } from 'next/router';
+import inventory from '../inventory.js';
+
+
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
-const Checkout = () => {
+export default function Checkout({product}) {
   const [currCart, setCurrCart] = useState([]);
   const [exactCart, setExactCart] = useState([]);
   const [empty, setEmpty] = useState("");
@@ -12,6 +15,9 @@ const Checkout = () => {
   const [isInCart, setIsInCart] = useState(false);
   const [total, setTotal] = useState([]);
   const [quantityHolder, setQuantityHolder] = useState(new Map);
+  const [poke, setPoke] = useState(1);
+  const [holder, setHolder] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     setIsInCart(false)
@@ -24,6 +30,7 @@ const Checkout = () => {
       for (let i = 0; i < currItems.length; i++) {
         if (!map.has(currItems[i].name)) {
           map.set(currItems[i].name, currItems[i].quantity)
+          holder.push([currItems[i].name, currItems[i].quantity])
         }
       }
       setQuantityHolder(map)
@@ -34,21 +41,18 @@ const Checkout = () => {
   }
 
     }, [])
-    console.log(quantityHolder.size)
 
-    const getQuanity = () => {
-      console.log(quantityHolder)
+    // const getQuanity = (e) => {
+    //   console.log(quantityHolder)
 
-      if (quantityHolder.size > 0) {
-      console.log(quantityHolder.get("Brushes"))
-      }
+    //   if (quantityHolder.size > 0) {
+    //   for(let i = 0; i < )
+    //   console.log(quantityHolder.get(""))
+    //   }
       
-    }
+    // }
     
 
-    useEffect(() => {
-      getQuanity();
-    }, [currCart])
 
   const handleClick = async (event) => {
     // Get Stripe.js instance
@@ -72,11 +76,38 @@ const Checkout = () => {
     // });
   }
 
-  const add = (e) => {
+  async function add(e) {
     // setQuantity(quantity + 1)
-   e.target.value = e.target.value + 1
+    let findItem = await currCart.find(item => item.name === e.target.name)
+    let itemIndex = await currCart.indexOf(findItem);
+    
+let findHolder = holder.find(item => item[0] === e.target.name)
+findHolder[1] = findHolder[1] + 1
+console.log(findHolder[1])
+console.log(holder[itemIndex][1])
+setHolder(...holder, holder[itemIndex][1] + 1)
+  //   e.target.value + 1
+  // let currQuant = await quantityHolder.get(e.target.id) 
+  // quantityHolder.set(currQuant, (Number(e.target.value) + 1))
+
   }
-  console.log(total)
+// useEffect(() => {
+//   setHolder(holder)
+// }, [holder])
+
+const test = e => {
+  setPoke(poke + 1)
+}
+
+const increase = (data, id) => {
+  const newData = [...data]
+  newData.forEach(item => {
+    if(item.id === id) item.quantity += 1
+  })
+  setCurrCart(newData)
+  console.log(currCart)
+
+}
 
   return (
   <div>
@@ -85,9 +116,15 @@ const Checkout = () => {
        return <div>
                   <h3>{prod.name}</h3>
                   <p>{prod.price}</p>                  
-                  <label className='quantity' htmlFor="quantity">Quantity</label>
-                  <input onClick={add} type="number" id="quantity" name={prod.id} value={Number(prod.quantity)} placeholder="1" min="1" max="100" />
-          <p>Item Totoal: {prod.price * prod.quantity}</p>
+                  {/* <label className='quantity' htmlFor="quantity">Quantity</label> */}
+          <p>Quantity {prod.quantity}</p>
+         <button className="btn btn-outline-secondary">
+           -
+         </button>
+         <button onClick={() => increase(currCart, prod.id)} className="btn btn-outline-secondary">
+           +
+         </button>
+
                </div>
               
               
@@ -97,10 +134,27 @@ const Checkout = () => {
     <button role="link" onClick={handleClick}>
       Checkout
     </button>
+    
+    <p onClick={test}>{poke}</p>
       </div>
       
   )
 
 }
 
-export default Checkout;
+// Checkout.getInitialProps = async () => {
+//   const res = Inve
+//   return {
+//     proucts: 
+//   }
+// }
+
+
+Checkout.getInitialProps = async () => {
+  const product = inventory
+
+console.log(product)
+  return {
+    product: product
+  }
+}

@@ -7,7 +7,7 @@ import { useEffect, useState, useContext } from "react";
 import Link from 'next/link';
 
 
-const FirstItem = ({url}) => {
+export default function FirstItem({product}) {
   const [currCart, setCurrCart] = useState([]);
   const [name, setName] = useState();
   const [price, setPrice] = useState();
@@ -25,25 +25,20 @@ const FirstItem = ({url}) => {
 
 function getProds() {
   const hold = localStorage.setItem("idHolder", JSON.stringify(Number(router.query.id)) )
-  console.log('itsme', idHolder)
 
   let holder = window.localStorage.getItem("idHolder")
   holder = JSON.parse(holder)
   setIdHolder(holder)
-  inventory.map((prod, key) => {
-    console.log(JSON.stringify(Number(router.query.id)), prod.id)
+  product.map((prod, key) => {
 
     key=prod.id
     if (Number(router.query.id) === idHolder ||  Number(router.query.id) === prod.id ) {
-      console.log('HEEEEEEEEEEY')
       setItem(prod)
       setName(prod.name)
       setPrice(prod.price)
       setQuantity(prod.quantity)
       setId(prod.id)
-      console.log('match',idHolder, Number(router.query.id), prod.id)
     } else {
-      console.log('NOOOOOOOOO')
     }
 
   })
@@ -59,7 +54,7 @@ function getProds() {
 
 useEffect(() => {
   getProds()
-  
+  console.log('product',product)
   if (window.localStorage.getItem("items")) {
     let currItems = window.localStorage.getItem("items")
     currItems = JSON.parse(currItems)
@@ -67,26 +62,20 @@ useEffect(() => {
     setCartItems(currItems)
     
     localStorage.setItem("currItem", JSON.stringify([{name, price, id, quantity}]) )
-    console.log('option1')
   
   }
 
 
-console.log(currCart)
 
   }, [router])
-  console.log('cart', name)
   useEffect(() => {
     for (let i = 0; i < currCart.length; i++) {
   
-      console.log('prod',currCart[i].name, '=', name)
       if ((currCart[i].name === name)) {
         setIsInCart(true)
-          console.log('its in the cart')
           break
           } else {
         setIsInCart(false)
-        console.log('its not in the cart')
         
 
       }
@@ -106,11 +95,9 @@ const addToCart = (e) => {
   if (!isInCart && currCart.length > 0) {
 
   localStorage.setItem("items", JSON.stringify([...currCart, {name, price, id, quantity}]) )
-  console.log('option1')
 
 } else if(!isInCart && currCart.length === 0) {
     localStorage.setItem("items", JSON.stringify([{name, price, quantity}]) )
-  console.log('option2')
   } else {
     null
   }
@@ -119,7 +106,6 @@ const addToCart = (e) => {
 } 
 
 
-console.log('isit', isInCart)
 // var holder = {};
 // currCart.forEach(function(d) {
 //   if (holder.hasOwnProperty(d.name)) {
@@ -267,18 +253,12 @@ return(
 
 
 }
-// how to fetch backend data with next js and use dynamic pages
-// const {publicRuntimeConfig} = getConfig()
-// console.log('hi',getConfig)
-// export async function getServerSideProps(context) {
-//   const {id} = context.query
-//   const res = await fetch(`${publicRuntimeConfig.API_URL}/items/${id}`)  
-//   const data = await res.json()
-//   return {
-//    props: {
-//      inventory: data
-//    },
-//   }
-// }
 
-export default FirstItem;
+FirstItem.getInitialProps = async () => {
+  const product = inventory
+
+console.log(product)
+  return {
+    product: product
+  }
+}
