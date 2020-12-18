@@ -3,39 +3,88 @@ import { withRouter, useRouter } from "next/router";
 import getConfig from 'next/config';
 import fetch from 'isomorphic-unfetch';
 import inventory from '../../inventory.js';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Link from 'next/link';
 
 
-const FirstItem = ({url}) => {
+export default function FirstItem({product}) {
   const [currCart, setCurrCart] = useState([]);
   const [name, setName] = useState();
   const [price, setPrice] = useState();
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState();
+  const [currQuantity, setCurrQuantity] = useState([]);
   const [item, setItem] = useState();
   const [items, setItems] = useState();
+  const [exactCart, setExactCart] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
+  const [isInCart, setIsInCart] = useState(false);
+  const [idHolder, setIdHolder] = useState();
+  const [id, setId] = useState();
+
   const router = useRouter();
-  console.log(router.query.id)
+
+function getProds() {
+  const hold = localStorage.setItem("idHolder", JSON.stringify(Number(router.query.id)) )
+
+  let holder = window.localStorage.getItem("idHolder")
+  holder = JSON.parse(holder)
+  setIdHolder(holder)
+  product.map((prod, key) => {
+
+    key=prod.id
+    if (Number(router.query.id) === idHolder ||  Number(router.query.id) === prod.id ) {
+      setItem(prod)
+      setName(prod.name)
+      setPrice(prod.price)
+      setQuantity(prod.quantity)
+      setId(prod.id)
+    } else {
+    }
+
+  })
+
+      let storage = window.localStorage.getItem("item-info")
+      storage = JSON.parse(storage)
+  
+  
+    
+
+  }
+
 
 useEffect(() => {
+  getProds()
+  console.log('product',product)
   if (window.localStorage.getItem("items")) {
     let currItems = window.localStorage.getItem("items")
     currItems = JSON.parse(currItems)
     setCurrCart(currItems)
+    setCartItems(currItems)
+    
+    localStorage.setItem("currItem", JSON.stringify([{name, price, id, quantity}]) )
+  
   }
-  inventory.map((prod, key) => {
-    key=prod.id
-    if (prod.id === Number(router.query.id)) {
-      setItem(prod)
-      setName(prod.name)
-      setPrice(prod.price)
-      setName(prod.name)
-      
-    }
-  })
 
-  }, [])
-  console.log('items', currCart)
+
+
+  }, [router])
+  useEffect(() => {
+    for (let i = 0; i < currCart.length; i++) {
+  
+      if ((currCart[i].name === name)) {
+        setIsInCart(true)
+          break
+          } else {
+        setIsInCart(false)
+        
+
+      }
+  
+    }
+
+  
+  }, [currCart])
+
 
 const add = (e) => {
   setQuantity(quantity + 1)
@@ -43,24 +92,43 @@ const add = (e) => {
 }
 
 const addToCart = (e) => {
-  localStorage.setItem("items", JSON.stringify([...currCart, {name, price, quantity}]) )
+  if (!isInCart && currCart.length > 0) {
 
-}
+  localStorage.setItem("items", JSON.stringify([...currCart, {name, price, id, quantity}]) )
+
+} else if(!isInCart && currCart.length === 0) {
+    localStorage.setItem("items", JSON.stringify([{name, price, quantity}]) )
+  } else {
+    null
+  }
+  
+
+} 
 
 
-function getItem() {
-  var get = window.localStorage.getItem("items")
-  get = JSON.parse(get)
-  console.log('hello', get[1])
+// var holder = {};
+// currCart.forEach(function(d) {
+//   if (holder.hasOwnProperty(d.name)) {
+//     holder[d.name] = holder[d.name] + d.quantity;
+//   } else {
+//     holder[d.name] = d.quantity
+//   }
+// })
 
+// var obj2 = [];
+// for (var prop in holder) {
+//   obj2.push({name: prop, quantity: holder[prop]})
+// }
+// localStorage.setItem("itemsQuantity", JSON.stringify(obj2) )
 
-}
+// exactCart.push(obj2)
+// console.log('obj2',obj2)
+
 
 
 return(
  <Layout title='url.query.title'>
    { inventory.map((item, key) => {
-      console.log(item.id)
       key=item.id
       if (item.id === Number(router.query.id)) { return <section className='item-page-container'>
       <div className='item-img'>
@@ -69,21 +137,22 @@ return(
       <div className='item-description'>
         <h3>{item.name}</h3>
         <p>{item.price}</p>
-        <ul  onClick={getItem} >
+        <ul>
           <li>Original Artwork</li>
           <li>Arrives with Certificate of Authencity</li>
           <li>Original Artwork</li>
           <li>Arrives with Certificate of Authencity</li>
 
         </ul>
-  <form action="/action_page.php">
-  <label className='quantity' htmlFor="quantity">Quantity</label>
-  <input onClick={add} type="number" id="quantity" name="quantity" value={quantity} min="1" max="100" />
+  <form action="/checkout">
   <Link href="/checkout"><button onClick={addToCart} className='cart'>Add to Cart</button></Link>
 </form>        
       </div>
+
     </section>
+    
    }})
+
     } 
     
     <style jsx>{`
@@ -184,18 +253,12 @@ return(
 
 
 }
-// how to fetch backend data with next js and use dynamic pages
-// const {publicRuntimeConfig} = getConfig()
-// console.log('hi',getConfig)
-// export async function getServerSideProps(context) {
-//   const {id} = context.query
-//   const res = await fetch(`${publicRuntimeConfig.API_URL}/items/${id}`)  
-//   const data = await res.json()
-//   return {
-//    props: {
-//      inventory: data
-//    },
-//   }
-// }
 
-export default FirstItem;
+FirstItem.getInitialProps = async () => {
+  const product = inventory
+
+console.log(product)
+  return {
+    product: product
+  }
+}

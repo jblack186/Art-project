@@ -1,61 +1,58 @@
 import { loadStripe } from '@stripe/stripe-js';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext, createContext } from "react";
+import { Router, useRouter } from 'next/router';
+import inventory from '../inventory.js';
+
+
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
-const Checkout = () => {
+
+export default function Checkout({product}) {
   const [currCart, setCurrCart] = useState([]);
-  var prods = ''
-  useEffect( () => {
-    
-    if (localStorage.getItem("items")) {
+  const [exactCart, setExactCart] = useState([]);
+  const [empty, setEmpty] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [isInCart, setIsInCart] = useState(false);
+  const [total, setTotal] = useState([]);
+  const [quantityHolder, setQuantityHolder] = useState(new Map);
+  const [poke, setPoke] = useState(1);
+  const [holder, setHolder] = useState([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    setIsInCart(false)
+
+    if (window.localStorage.getItem("items")) {
       let currItems = localStorage.getItem("items")
       currItems = JSON.parse(currItems)
       setCurrCart(currItems)
+      let map = new Map();
+      for (let i = 0; i < currItems.length; i++) {
+        if (!map.has(currItems[i].name)) {
+          map.set(currItems[i].name, currItems[i].quantity)
+          holder.push([currItems[i].name, currItems[i].quantity])
+        }
+      }
+      setQuantityHolder(map)
+
     
-    prods = currItems
-    
+  } else {
+    setEmpty("Nothing in Cart")
   }
+
     }, [])
 
+    // const getQuanity = (e) => {
+    //   console.log(quantityHolder)
 
-  useEffect( () => {
-  function getProd() {
-    if (localStorage.getItem("items")) {
-      var currItems =  localStorage.getItem("items")
-      currItems = JSON.parse(currItems)
-      setCurrCart(currItems)
-    
-    
-    let display = currCart[0];
-    const map = new Map();
-      console.log('hey')
-    if(currCart.length > 0) {
-    for (let i = 1; i < currCart.length; i++) {
-      console.log('hi')
-
-      let currQuantity = ''
-      if (map.has(currCart[i].name) === false) {
-        console.log('yes')
-
-        currQuantity = currCart[i].quantity
-        map.set(currCart[i].name, currCart[i].quantity)
-      } else {
-        console.log('no')
-        map.set(currCart[i].name, currQuantity + currCart[i].quantity)
-
-        
-      }
+    //   if (quantityHolder.size > 0) {
+    //   for(let i = 0; i < )
+    //   console.log(quantityHolder.get(""))
+    //   }
       
-    }
-    }
-  
-    console.log('map',map)
- 
-  } else {
-    console.log('no')
-  }
-}
-    },[])
+    // }
+    
+
 
   const handleClick = async (event) => {
     // Get Stripe.js instance
@@ -79,23 +76,85 @@ const Checkout = () => {
     // });
   }
 
+  async function add(e) {
+    // setQuantity(quantity + 1)
+    let findItem = await currCart.find(item => item.name === e.target.name)
+    let itemIndex = await currCart.indexOf(findItem);
+    
+let findHolder = holder.find(item => item[0] === e.target.name)
+findHolder[1] = findHolder[1] + 1
+console.log(findHolder[1])
+console.log(holder[itemIndex][1])
+setHolder(...holder, holder[itemIndex][1] + 1)
+  //   e.target.value + 1
+  // let currQuant = await quantityHolder.get(e.target.id) 
+  // quantityHolder.set(currQuant, (Number(e.target.value) + 1))
+
+  }
+// useEffect(() => {
+//   setHolder(holder)
+// }, [holder])
+
+const test = e => {
+  setPoke(poke + 1)
+}
+
+const increase = (data, id) => {
+  const newData = [...data]
+  newData.forEach(item => {
+    if(item.id === id) item.quantity += 1
+  })
+  setCurrCart(newData)
+  console.log(currCart)
+
+}
 
   return (
   <div>
-          {currCart ? currCart.map(prod => {
-        return <div>
+          {currCart ? currCart.map((prod, index) => {  
+            index=prod.id           
+       return <div>
                   <h3>{prod.name}</h3>
-                  <p>{prod.price}</p>
-               </div>
-      }) : null }
+                  <p>{prod.price}</p>                  
+                  {/* <label className='quantity' htmlFor="quantity">Quantity</label> */}
+          <p>Quantity {prod.quantity}</p>
+         <button className="btn btn-outline-secondary">
+           -
+         </button>
+         <button onClick={() => increase(currCart, prod.id)} className="btn btn-outline-secondary">
+           +
+         </button>
 
+               </div>
+              
+              
+      }) : null }
+<p>{total}</p>
     <h1>Checkout</h1>
     <button role="link" onClick={handleClick}>
       Checkout
     </button>
+    
+    <p onClick={test}>{poke}</p>
       </div>
+      
   )
 
 }
 
-export default Checkout;
+// Checkout.getInitialProps = async () => {
+//   const res = Inve
+//   return {
+//     proucts: 
+//   }
+// }
+
+
+Checkout.getInitialProps = async () => {
+  const product = inventory
+
+console.log(product)
+  return {
+    product: product
+  }
+}
