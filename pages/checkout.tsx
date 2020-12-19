@@ -105,30 +105,58 @@ const increase = (data, id) => {
     if(item.id === id) item.quantity += 1
   })
   setCurrCart(newData)
-  console.log(currCart)
 
 }
 
+const decrease = (data, id) => {
+  const newData = [...data]
+  newData.forEach(item => {
+    if(item.id === id && item.quantity >= 2) item.quantity -= 1
+  })
+  setCurrCart(newData)
+
+}
+
+const remove = (data, id) => {
+  const newData = [...data]
+  let dataLength = newData.length;
+  if (data.length > 1) {
+  let newId = (id - 1)
+  console.log(id)
+  newData.splice(newId, 1)
+  console.log(newData)
+  setCurrCart(newData)
+ } else {
+   newData.pop();
+   setCurrCart(newData);
+ }
+}
+
+
   return (
   <div>
-          {currCart ? currCart.map((prod, index) => {  
+          {currCart.length > 0 ? currCart.map((prod, index) => {  
             index=prod.id           
        return <div>
                   <h3>{prod.name}</h3>
                   <p>{prod.price}</p>                  
-                  {/* <label className='quantity' htmlFor="quantity">Quantity</label> */}
           <p>Quantity {prod.quantity}</p>
-         <button className="btn btn-outline-secondary">
+         <button onClick={() => decrease(currCart, prod.id)} className="btn btn-outline-secondary">
            -
          </button>
          <button onClick={() => increase(currCart, prod.id)} className="btn btn-outline-secondary">
            +
          </button>
+         <p>{prod.price * prod.quantity}</p>
+         <button onClick={() => remove(currCart, prod.id)} className="btn btn-outline-secondary">
+           X
+         </button>
+
 
                </div>
               
               
-      }) : null }
+      }) : <p>Nothing in Cart</p> }
 <p>{total}</p>
     <h1>Checkout</h1>
     <button role="link" onClick={handleClick}>
