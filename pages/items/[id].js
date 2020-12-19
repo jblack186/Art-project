@@ -97,7 +97,7 @@ const addToCart = (e) => {
   localStorage.setItem("items", JSON.stringify([...currCart, {name, price, id, quantity}]) )
 
 } else if(!isInCart && currCart.length === 0) {
-    localStorage.setItem("items", JSON.stringify([{name, price, quantity}]) )
+    localStorage.setItem("items", JSON.stringify([{name, price, quantity, id}]) )
   } else {
     null
   }
@@ -105,24 +105,6 @@ const addToCart = (e) => {
 
 } 
 
-
-// var holder = {};
-// currCart.forEach(function(d) {
-//   if (holder.hasOwnProperty(d.name)) {
-//     holder[d.name] = holder[d.name] + d.quantity;
-//   } else {
-//     holder[d.name] = d.quantity
-//   }
-// })
-
-// var obj2 = [];
-// for (var prop in holder) {
-//   obj2.push({name: prop, quantity: holder[prop]})
-// }
-// localStorage.setItem("itemsQuantity", JSON.stringify(obj2) )
-
-// exactCart.push(obj2)
-// console.log('obj2',obj2)
 
 
 
