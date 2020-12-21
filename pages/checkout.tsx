@@ -13,7 +13,7 @@ export default function Checkout({product}) {
   const [empty, setEmpty] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [isInCart, setIsInCart] = useState(false);
-  const [total, setTotal] = useState([]);
+  const [total, setTotal] = useState();
   const [quantityHolder, setQuantityHolder] = useState(new Map);
   const [poke, setPoke] = useState(1);
   const [holder, setHolder] = useState([]);
@@ -26,14 +26,6 @@ export default function Checkout({product}) {
       let currItems = localStorage.getItem("items")
       currItems = JSON.parse(currItems)
       setCurrCart(currItems)
-      let map = new Map();
-      for (let i = 0; i < currItems.length; i++) {
-        if (!map.has(currItems[i].name)) {
-          map.set(currItems[i].name, currItems[i].quantity)
-          holder.push([currItems[i].name, currItems[i].quantity])
-        }
-      }
-      setQuantityHolder(map)
 
     
   } else {
@@ -42,19 +34,10 @@ export default function Checkout({product}) {
 
     }, [])
 
-    // const getQuanity = (e) => {
-    //   console.log(quantityHolder)
-
-    //   if (quantityHolder.size > 0) {
-    //   for(let i = 0; i < )
-    //   console.log(quantityHolder.get(""))
-    //   }
-      
-    // }
-    
 
 
   const handleClick = async (event) => {
+    let items = localStorage.getItem("items")
     // Get Stripe.js instance
     // Call your backend to create the Checkout Session
     const {sessionId} = await fetch('/api/checkout/session', { 
@@ -62,7 +45,7 @@ export default function Checkout({product}) {
       headers: {
         "content-type": "application/json"
       },
-      body: JSON.stringify({ quantity: 1 })
+      body: JSON.stringify(items)
     }).then(res => res.json())
 
     const stripe = await stripePromise;
@@ -77,35 +60,26 @@ export default function Checkout({product}) {
   }
 
   async function add(e) {
-    // setQuantity(quantity + 1)
     let findItem = await currCart.find(item => item.name === e.target.name)
     let itemIndex = await currCart.indexOf(findItem);
     
-let findHolder = holder.find(item => item[0] === e.target.name)
-findHolder[1] = findHolder[1] + 1
-console.log(findHolder[1])
-console.log(holder[itemIndex][1])
-setHolder(...holder, holder[itemIndex][1] + 1)
-  //   e.target.value + 1
-  // let currQuant = await quantityHolder.get(e.target.id) 
-  // quantityHolder.set(currQuant, (Number(e.target.value) + 1))
+    let findHolder = holder.find(item => item[0] === e.target.name)
+    findHolder[1] = findHolder[1] + 1
+    console.log(findHolder[1])
+    console.log(holder[itemIndex][1])
+    setHolder(...holder, holder[itemIndex][1] + 1)
 
   }
-// useEffect(() => {
-//   setHolder(holder)
-// }, [holder])
 
-const test = e => {
-  setPoke(poke + 1)
-}
 
 const increase = (data, id) => {
   const newData = [...data]
   newData.forEach(item => {
     if(item.id === id) item.quantity += 1
-  })
-  setCurrCart(newData)
 
+  })
+  
+  setCurrCart(newData)
 }
 
 const decrease = (data, id) => {
@@ -123,21 +97,46 @@ const remove = (data, id) => {
   if (data.length > 1) {
   let newId = (id - 1)
   console.log(id)
-  newData.splice(newId, 1)
+  newData.splice(id, 1)
   console.log(newData)
   setCurrCart(newData)
+  localStorage.setItem('items', JSON.stringify(newData))
  } else {
    newData.pop();
    setCurrCart(newData);
+   localStorage.setItem('items', JSON.stringify(newData))
+
  }
 }
 
+// useEffect(() => {
+  
+// }, )
+console.log(currCart)
+ function totaling() {
+  
+  let addUp = currCart.reduce(function (acc, item) {
+    acc += item.price * item.quantity
+  }, 0);
+  setTotal(addUp)
+  console.log(addUp)
+}
+
+ 
+
+console.log('outside',total)
+
+useEffect(() => {
+  totaling()
+}, [])
 
   return (
   <div>
-          {currCart.length > 0 ? currCart.map((prod, index) => {  
-            index=prod.id           
-       return <div>
+
+          {currCart.length > 0 ? currCart.map((prod, i) => {  
+                       
+       return <div  key={i}>
+        
                   <h3>{prod.name}</h3>
                   <p>{prod.price}</p>                  
           <p>Quantity {prod.quantity}</p>
@@ -147,23 +146,26 @@ const remove = (data, id) => {
          <button onClick={() => increase(currCart, prod.id)} className="btn btn-outline-secondary">
            +
          </button>
+         {console.log(typeof(prod.price), typeof(prod.quanitity))}
+
          <p>{prod.price * prod.quantity}</p>
-         <button onClick={() => remove(currCart, prod.id)} className="btn btn-outline-secondary">
+         <button onClick={() => remove(currCart, i)} className="btn btn-outline-secondary">
            X
          </button>
-
 
                </div>
               
               
       }) : <p>Nothing in Cart</p> }
-<p>{total}</p>
     <h1>Checkout</h1>
+    <h4> Total ${currCart.reduce((acc, item) => {
+      return ( acc += item.quantity * Number(item.price))
+    }, 0)}</h4>
+
     <button role="link" onClick={handleClick}>
       Checkout
     </button>
     
-    <p onClick={test}>{poke}</p>
       </div>
       
   )

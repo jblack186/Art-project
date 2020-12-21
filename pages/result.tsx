@@ -10,6 +10,7 @@ export default function Result() {
       ? `/api/checkout/${router.query.session_id}`
       : null,
     (url) => fetch(url).then(res => res.json())
+    
   );
 
 
