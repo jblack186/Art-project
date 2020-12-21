@@ -13,6 +13,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       {
         price: process.env.PRICE_ID,
         quantity,
+
       },
     ],
     mode: 'payment',
