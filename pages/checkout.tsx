@@ -1,4 +1,5 @@
 import { loadStripe } from '@stripe/stripe-js';
+import {Elements} from '@stripe/react-stripe-js'
 import { useEffect, useState, useContext, createContext } from "react";
 import { Router, useRouter } from 'next/router';
 import inventory from '../inventory.js';
@@ -45,7 +46,7 @@ export default function Checkout({product}) {
       headers: {
         "content-type": "application/json"
       },
-      body: JSON.stringify(items)
+      body: JSON.stringify({quantity})
     }).then(res => res.json())
 
     const stripe = await stripePromise;
@@ -159,13 +160,13 @@ useEffect(() => {
       }) : <p>Nothing in Cart</p> }
     <h1>Checkout</h1>
     <h4> Total ${currCart.reduce((acc, item) => {
-      return ( acc += item.quantity * Number(item.price))
+       ( acc += item.quantity * Number(item.price))
+      return acc
     }, 0)}</h4>
 
     <button role="link" onClick={handleClick}>
       Checkout
     </button>
-    
       </div>
       
   )
