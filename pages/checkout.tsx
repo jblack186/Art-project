@@ -157,7 +157,7 @@ useEffect(() => {
 
   return (
   <div>
-
+      
           {currCart.length > 0 ? currCart.map((prod, i) => {  
                        
        return <div  key={i}>
