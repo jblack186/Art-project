@@ -11,6 +11,7 @@ export default function FirstItem({product}) {
   const [currCart, setCurrCart] = useState([]);
   const [name, setName] = useState();
   const [price, setPrice] = useState();
+  const [priceView, setPriceView] = useState();
   const [quantity, setQuantity] = useState();
   const [currQuantity, setCurrQuantity] = useState([]);
   const [item, setItem] = useState();
@@ -35,9 +36,10 @@ function getProds() {
     if (Number(router.query.id) === idHolder ||  Number(router.query.id) === prod.id ) {
       setItem(prod)
       setName(prod.name)
-      setPrice(prod.price)
+      setPriceView(prod.priceView)
       setQuantity(prod.quantity)
       setId(prod.id)
+      setPrice(prod.price)
     } else {
     }
 
@@ -51,7 +53,6 @@ function getProds() {
 
   }
 
-
 useEffect(() => {
   getProds()
   console.log('product',product)
@@ -61,7 +62,7 @@ useEffect(() => {
     setCurrCart(currItems)
     setCartItems(currItems)
     
-    localStorage.setItem("currItem", JSON.stringify([{name, price, id, quantity}]) )
+    localStorage.setItem("currItem", JSON.stringify([{name, price, id, priceView, quantity}]) )
   
   }
 
@@ -94,10 +95,10 @@ const add = (e) => {
 const addToCart = (e) => {
   if (!isInCart && currCart.length > 0) {
 
-  localStorage.setItem("items", JSON.stringify([...currCart, {name, price, id, quantity}]) )
+  localStorage.setItem("items", JSON.stringify([...currCart, {name, price, id, quantity, priceView}]) )
 
 } else if(!isInCart && currCart.length === 0) {
-    localStorage.setItem("items", JSON.stringify([{name, price, quantity, id}]) )
+    localStorage.setItem("items", JSON.stringify([{name, price, quantity, id, priceView}]) )
   } else {
     null
   }
@@ -118,7 +119,7 @@ return(
       </div>
       <div className='item-description'>
         <h3>{item.name}</h3>
-        <p>{item.price}</p>
+        <p>{item.priceView}</p>
         <ul>
           <li>Original Artwork</li>
           <li>Arrives with Certificate of Authencity</li>
